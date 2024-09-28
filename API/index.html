@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Погода в Уфе</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <h2>Выберете город</h2>
+    <select id="cityselect" onchange="getWeather(this.value)">
+        <option value="1486209">Екатеринбург</option>
+        <option value="1496747">Новосибирск</option>
+        <option value="1502028">Красноярск</option>
+        <option value="492249">Ростов-на-Дону</option>
+        <option value="1497740">Челябинск</option>
+    </select>
+
+    <h1>Текущая погода</h1>
+    <div id="weather">
+        <p>Загрузка данных...</p>
+    </div>
+
+    <script>
+        function getWeather(cityId) {
+            $.ajax({
+                url: 'get_weather.php',
+                type: 'GET',
+                data: { cityId: cityId }, // Исправленный синтаксис
+                success: function (data) {
+                    var weather = JSON.parse(data);
+                    var html = `
+                    <p><b>${weather.name}</b></p>
+                    <p>Температура: ${weather.main.temp}°C</p>
+                    <p>Описание: ${weather.weather[0].description}</p>
+                    <p>Влажность: ${weather.main.humidity}%</p>
+                    `;
+                    $('#weather').html(html);
+                },
+                error: function () {
+                    $('#weather').html('<p>Ошибка при получении данных</p>');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
